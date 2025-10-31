@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME HUB STORE</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #121212; color: #fff; margin: 0; padding: 0; }
+        .header { background: #1f1f1f; padding: 15px; text-align: center; border-bottom: 3px solid #00c853; }
+        .header img { max-width: 150px; height: auto; }
+        .tagline { color: #00c853; font-size: 1.1em; margin-top: 5px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .section-title { color: #00c853; font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 20px; text-align: center; }
+
+        /* Main Menu Grid */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .menu-item { background: #1f1f1f; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #333; }
+        .menu-item:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0, 200, 83, 0.3); }
+        .menu-item img { max-width: 80px; height: auto; margin-bottom: 10px; }
+        .menu-item h3 { margin: 0; font-size: 1.1em; color: #fff; }
+
+        /* Package List Styling (Initially Hidden) */
+        .packages-container { display: none; }
+        .package-list { list-style: none; padding: 0; }
+        .package-item { background: #2a2a2a; margin-bottom: 10px; padding: 15px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; border-left: 5px solid #00c853; }
+        .package-info { display: flex; align-items: center; }
+        .package-info img { width: 30px; height: 30px; margin-right: 15px; }
+        .package-details { text-align: left; }
+        .package-details .price { color: #ffeb3b; font-weight: bold; font-size: 1.1em; }
+        .package-details .note { color: #ccc; font-size: 0.8em; margin-top: 2px; }
+
+        /* Purchase Button */
+        .buy-btn { background: #00c853; color: #121212; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .buy-btn:hover { background: #00a040; }
+
+        /* Payment Section */
+        .payment-section { text-align: center; padding: 20px; background: #1f1f1f; border-radius: 8px; margin-top: 30px; }
+        .payment-section img { max-width: 250px; height: auto; margin: 15px 0; border: 5px solid #00c853; border-radius: 10px; }
+        .payment-apps { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        .payment-apps img { width: 50px; height: auto; }
+        .payment-note { color: #9e9e9e; margin-top: 20px; font-size: 0.9em; }
+
+        /* Footer */
+        .footer { background: #1f1f1f; color: #757575; text-align: center; padding: 15px; margin-top: 30px; font-size: 0.8em; }
+        .footer a { color: #00c853; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
+        .modal-content { background-color: #1f1f1f; margin: 10% auto; padding: 20px; border: 1px solid #00c853; width: 80%; max-width: 400px; border-radius: 10px; text-align: center; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close-btn:hover, .close-btn:focus { color: #fff; text-decoration: none; cursor: pointer; }
+        .modal-content input, .modal-content textarea { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #333; background: #2a2a2a; color: #fff; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img id="gameHubLogo" src="" alt="Game Hub Logo">
+        <h1>GAME HUB STORE</h1>
+        <div class="tagline">Your instant Recharge Partner VIA ID & Ser up</div>
+    </div>
+
+    <div class="container">
+        <div id="main-menu">
+            <h2 class="section-title">Select Your Recharge Category</h2>
+            <div class="menu-grid">
+                <div class="menu-item" onclick="showPackages('diamond')">
+                    <img id="diamondIcon" src="" alt="Diamond Icon">
+                    <h3>DIAMOND PACKS</h3>
+                </div>
+                <div class="menu-item" onclick="showPackages('doubleDiamond')">
+                    <img id="doubleDiamondIcon" src="" alt="Double Diamond Icon">
+                    <h3>DOUBLE DIAMOND</h3>
+                </div>
+                <div class="menu-item" onclick="showPackages('weeklyPass')">
+                    <img id="weeklyPassIcon" src="" alt="Weekly Pass Icon">
+                    <h3>WEEKLY PASS</h3>
+                </div>
+                <div class="menu-item" onclick="showPackages('starlight')">
+                    <img id="starlightIcon" src="" alt="Starlight Icon">
+                    <h3>STARLIGHT</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="packages-section" class="packages-container">
+            <h2 class="section-title" id="packagesTitle"></h2>
+            <ul class="package-list" id="packageList">
+                </ul>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="buy-btn" onclick="showMainMenu()">← Back to Categories</button>
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <h2 class="section-title">Payment Method</h2>
+            <img id="qrCodeImage" src="" alt="UPI QR Code">
+            <p>Scan above to pay using any UPI app.</p>
+            <div class="payment-apps">
+                <img id="gPayLogo" src="" alt="G Pay">
+                <img id="phonePeLogo" src="" alt="PhonePe">
+                <img id="paytmLogo" src="" alt="Paytm">
+                <img id="naviLogo" src="" alt="Navi">
+            </div>
+            <p class="payment-note">After payment, click 'PAYMENT CONFIRMED' and send the required details.</p>
+            <button class="buy-btn" onclick="openPaymentModal('Payment Confirmed', '')">PAYMENT CONFIRMED</button>
+        </div>
+    </div>
+
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDescription"></p>
+            <input type="text" id="userID" placeholder="Your Game ID">
+            <input type="text" id="serverID" placeholder="Your Server ID (e.g., 2011)">
+            <textarea id="transactionDetails" placeholder="UPI App Used (e.g., GPay), Transaction ID/Reference No., and Payment Time" rows="3"></textarea>
+            <button class="buy-btn" id="whatsappLink">Send Details via WhatsApp</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 GAME HUB STORE. | Designed by <a href="https://t.me/Miyukicore-kun" target="_blank">GHS</a>
+    </div>
+
+    <script>
+        // ***********************************************
+        // 1. IMAGE LINKS (DO NOT CHANGE VARIABLE NAMES)
+        // ***********************************************
+        var images = {
+            // Game Hub Logo & QR Code
+            gameHubLogo: 'https://i.ibb.co/qM0R4LI/IMG-20250914-WA0025.jpg',
+            qrCode: 'https://i.ibb.co/YFXR7fY/IMG-20251027-165909.jpg',
+
+            // Main Menu Icons
+            diamond: 'https://i.ibb.co/zVvjhns/IMG-20251031-015536.jpg',
+            doubleDiamond: 'https://i.ibb.co/SzkqLdn/1751040249051-Picsart-25-06-07-11-40-34-867-scaled.jpg',
+            weeklyPass: 'https://i.ibb.co/7J3gnhhs/971ab59b7f877cf68af24f8cd295d2d3.jpg',
+            starlightMain: 'https://i.ibb.co/wFbkgRl/b4347a44c9432d8529c0b66c9376aa11.jpg',
+
+            // Package Icons (Inside the menus)
+            doubleDiamondTicket: 'https://i.ibb.co/RkdNHs5/n/1749652372282-1735808143226-Time-Limited-Super-Value-Pass.jpg',
+            starlightNormal: 'https://i.ibb.co/Q325RwVg/1000164093-removebg-preview.png',
+            starlightPremium: 'https://i.ibb.co/jZrBjKv/2/1000164094-removebg-preview.png',
+
+            // Payment App Logos
+            gPayLogo: 'https://i.ibb.co/fJP8R74/f2212798658f170e1737afdeac6a6c0f.jpg',
+            phonePeLogo: 'https://i.ibb.co/fzPgSQ/1f7fee22be2428c2cc43bd8494424e75.jpg',
+            paytmLogo: 'https://i.ibb.co/tTh6nc1T/08be068f3e4fb0c701ff73760b6f83f8.jpg',
+            naviLogo: 'https://i.ibb.co/6z0sF3L/Navi-Logo.png'
+        };
+
+        // ***********************************************
+        // 2. CONFIGURATION (TEXT AND LINKS)
+        // ***********************************************
+        var config = {
+            // Text configuration
+            gameHubName: 'GAME HUB STORE', 
+            tagline: 'Your instant Recharge Partner VIA ID & Ser up',
+            footerLinkText: 'GHS',
+            
+            // CONTACT LINKS - FINALIZED
+            whatsappNumber: '919863095622', // FINAL WHATSAPP NUMBER
+            telegramLink: 'https://t.me/Miyukicore-kun', // FINAL TELEGRAM LINK
+
+            // Package Definitions - NOW CUSTOMIZED WITH YOUR EXACT PRODUCTS
+            packages: {
+                diamond: [
+                    // Normal Pack
+                    { name: '55 Diamonds', price: '₹ 80', icon: images.diamond, value: '55 Diamonds' },
+                    { name: '86 Diamonds', price: '₹ 120', icon: images.diamond, value: '86 Diamonds' },
+                    { name: '110 Diamonds', price: '₹ 160', icon: images.diamond, value: '110 Diamonds' },
+                    { name: '172 Diamonds', price: '₹ 230', icon: images.diamond, value: '172 Diamonds' },
+                    { name: '257 Diamonds', price: '₹ 330', icon: images.diamond, value: '257 Diamonds' },
+                    { name: '343 Diamonds', price: '₹ 450', icon: images.diamond, value: '343 Diamonds' },
+                    { name: '429 Diamonds', price: '₹ 570', icon: images.diamond, value: '429 Diamonds' },
+                    { name: '514 Diamonds', price: '₹ 680', icon: images.diamond, value: '514 Diamonds' },
+                    { name: '600 Diamonds', price: '₹ 790', icon: images.diamond, value: '600 Diamonds' },
+                    { name: '706 Diamonds', price: '₹ 880', icon: images.diamond, value: '706 Diamonds' },
+                    { name: '878 Diamonds', price: '₹ 1090', icon: images.diamond, value: '878 Diamonds' },
+                    // Large Pack
+                    { name: '1049 Diamonds (Large)', price: '₹ 1340', icon: images.diamond, value: '1049 Diamonds' },
+                    { name: '1220 Diamonds (Large)', price: '₹ 1570', icon: images.diamond, value: '1220 Diamonds' },
+                    { name: '1412 Diamonds (Large)', price: '₹ 1740', icon: images.diamond, value: '1412 Diamonds' },
+                    { name: '2195 Diamonds (Large)', price: '₹ 2610', icon: images.diamond, value: '2195 Diamonds' },
+                    { name: '3688 Diamonds (Large)', price: '₹ 4410', icon: images.diamond, value: '3688 Diamonds' },
+                    { name: '5532 Diamonds (Large)', price: '₹ 6880', icon: images.diamond, value: '5532 Diamonds' },
+                    { name: '9288 Diamonds (Large)', price: '₹ 11400', icon: images.diamond, value: '9288 Diamonds' }
+                ],
+                doubleDiamond: [
+                    { name: '50+5 Diamonds', price: '₹ 90', icon: images.doubleDiamondTicket, value: '50+5 Diamonds' },
+                    { name: '150+15 Diamonds', price: '₹ 250', icon: images.doubleDiamondTicket, value: '150+15 Diamonds' },
+                    { name: '250+25 Diamonds', price: '₹ 360', icon: images.doubleDiamondTicket, value: '250+25 Diamonds' },
+                    { name: '500+65 Diamonds', price: '₹ 720', icon: images.doubleDiamondTicket, value: '500+65 Diamonds' }
+                ],
+                weeklyPass: [
+                    { name: '1 Week Pass', price: '₹ 135', icon: images.weeklyPass, value: '1 Week Pass' },
+                    { name: '2 Week Pass', price: '₹ 270', icon: images.weeklyPass, value: '2 Week Pass' },
+                    { name: '3 Week Pass', price: '₹ 405', icon: images.weeklyPass, value: '3 Week Pass' }
+                ],
+                starlight: [
+                    { name: 'Starlight Card (Normal)', price: '₹ 240', icon: images.starlightNormal, value: 'Starlight Card (Normal)', note: 'Requires 7 days friendship' },
+                    { name: 'Premium Starlight Card', price: '₹ 460', icon: images.starlightPremium, value: 'Premium Starlight Card', note: 'Requires 7 days friendship' }
+                ]
+            }
+        };
+
+        // ***********************************************
+        // 3. JAVASCRIPT LOGIC (DO NOT EDIT BELOW)
+        // ***********************************************
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gameHubLogo').src = images.gameHubLogo;
+            document.getElementById('qrCodeImage').src = images.qrCode;
+            document.getElementById('diamondIcon').src = images.diamond;
+            document.getElementById('doubleDiamondIcon').src = images.doubleDiamond;
+            document.getElementById('weeklyPassIcon').src = images.weeklyPass;
+            document.getElementById('starlightIcon').src = images.starlightMain;
+            document.getElementById('gPayLogo').src = images.gPayLogo;
+            document.getElementById('phonePeLogo').src = images.phonePeLogo;
+            document.getElementById('paytmLogo').src = images.paytmLogo;
+            document.getElementById('naviLogo').src = images.naviLogo;
+
+            document.querySelector('.header h1').textContent = config.gameHubName;
+            document.querySelector('.tagline').textContent = config.tagline;
+            document.querySelector('.footer a').textContent = config.footerLinkText;
+            document.querySelector('.footer a').href = config.telegramLink;
+        });
+
+        function showPackages(category) {
+            const container = document.getElementById('packageList');
+            container.innerHTML = '';
+            
+            const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+            document.getElementById('packagesTitle').textContent = categoryName.replace('diamond', 'Diamond').replace('starlight', 'Starlight') + ' Packages';
+
+            config.packages[category].forEach(pkg => {
+                const listItem = document.createElement('li');
+                listItem.className = 'package-item';
+                let noteHTML = pkg.note ? `<div class="note">${pkg.note}</div>` : '';
+
+                listItem.innerHTML = `
+                    <div class="package-info">
+                        <img src="${pkg.icon}" alt="${pkg.name} icon">
+                        <div class="package-details">
+                            <div>${pkg.name}</div>
+                            <div class="price">${pkg.price}</div>
+                            ${noteHTML}
+                        </div>
+                    </div>
+                    <button class="buy-btn" onclick="openPaymentModal('${pkg.name}', '${pkg.value} for ${pkg.price}')">Buy Now</button>
+                `;
+                container.appendChild(listItem);
+            });
+
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('packages-section').style.display = 'block';
+        }
+
+        function showMainMenu() {
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('packages-section').style.display = 'none';
+        }
+
+        let currentPackage = '';
+
+        function openPaymentModal(title, description) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            currentPackage = description;
+            
+            // Clear inputs for fresh use
+            document.getElementById('userID').value = '';
+            document.getElementById('serverID').value = '';
+            document.getElementById('transactionDetails').value = '';
+
+            document.getElementById('purchaseModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        document.getElementById('whatsappLink').onclick = function() {
+            const userID = document.getElementById('userID').value;
+            const serverID = document.getElementById('serverID').value;
+            const transDetails = document.getElementById('transactionDetails').value;
+            const packageInfo = currentPackage || document.getElementById('modalTitle').textContent;
+            
+            // The message will be sent to the number defined in config.whatsappNumber
+            let message = `*GAME HUB STORE ORDER DETAILS*%0A`;
+            message += `*Package:* ${packageInfo}%0A%0A`;
+            message += `*Game ID:* ${userID}%0A`;
+            message += `*Server ID:* ${serverID}%0A%0A`;
+            message += `*Payment Details:*%0A${transDetails}%0A%0A`;
+            message += `(Please confirm the payment was successfully completed before sending this message.)`;
+            
+            const whatsappURL = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        };
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('purchaseModal')) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>
+
